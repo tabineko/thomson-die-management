@@ -49,12 +49,12 @@ class MyCameraApp(App):
 
 
 if __name__ == '__main__':
-    cap = cv2.VideoCapture(DEVICE_ID)
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
-    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y','U','Y','V'))
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-    cap.set(cv2.CAP_PROP_FPS, FPS)
+    # cap = cv2.VideoCapture(DEVICE_ID)
+    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+    # # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y','U','Y','V'))
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+    # cap.set(cv2.CAP_PROP_FPS, FPS)
 
     print(os.path.exists('./icons/capture.jpgs'))
     MyCameraApp().run()

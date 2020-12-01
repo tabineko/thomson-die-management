@@ -28,7 +28,7 @@ class ImageButton(ButtonBehavior, Image):
 class CameraPreview(Image):
     def __init__(self, **kwargs):
         super(CameraPreview, self).__init__(**kwargs)
-        self.capture = cv2.VideoCapture(0)
+        self.capture = cv2.VideoCapture(1)
         Clock.schedule_interval(self.update, 1.0 / 30)
 
     def update(self, dt):

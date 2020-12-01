@@ -43,6 +43,9 @@ ERR_NAK_NEWPW    = 0x05    # Received a NAK sending new password (CMD_SETPASS)
 ERR_LIW_NEWPW    = 0x06    # Did not find a listen window after setting new password (CMD_SETPASS)
 ERR_PARITY       = 0x07    # Parity error when reading data
 
+START_BYTE = 0x0A
+STOP_BYTE = 0x0D
+
 class Unbuffered(object):
    def __init__(self, stream):
        self.stream = stream
@@ -61,18 +64,19 @@ import time
 # port = "/dev/tty.usbserial-AI05BXXH"    # OS X
 port = "//./COM3"                      # Windows
 
-ser = serial.Serial(port, 9600, timeout = None)    # open serial port
+ser = serial.Serial(port, 2400, timeout = 1)    # open serial port
 sys.stdout = Unbuffered(sys.stdout)                # open stdout in unbuffered mode (automatically flush after each print operation)
 
 print("Parallax RFID Read/Write USB Module Test Application\n")
-
 print("Reading tag's unique serial number...")
+
 while True:
   ser.write(('!RW' + chr(CMD_READ) + chr(ADDR_SERIAL)).encode())    # send command
-  buf = ser.read(5)           # get bytes (will block until received)  
-  if buf[0] == chr(ERR_OK):   # if valid data received with no error, continue
+  buf = ser.read(12).decode('UTF-8')           # get bytes (will block until received)  
+  if buf[0] == chr(START_BYTE) and buf[-1] == chr(STOP_BYTE):   # if valid data received with no error, continue
     break
-  print(buf[0], buf[1], buf[2], buf[3], buf[4])
+  # print(type(buf))
+  print(buf[0], buf[1:-2], buf[-1])
   time.sleep(1)
 for i in range(1,len(buf)):   # display data
   sys.stdout.write("%02X" % ord(buf[i]))

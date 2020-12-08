@@ -54,7 +54,7 @@ class Unbuffered(object):
        self.stream.flush()
    def __getattr__(self, attr):
        return getattr(self.stream, attr)
-      
+
 import os
 import sys
 import serial  # http://pyserial.sourceforge.net/
@@ -62,7 +62,7 @@ import time
 
 # change port name to match your particular instance
 # port = "/dev/tty.usbserial-AI05BXXH"    # OS X
-port = "//./COM3"                      # Windows
+port = "//./COM3"                         # Windows
 
 ser = serial.Serial(port, 2400, timeout = 1)    # open serial port
 sys.stdout = Unbuffered(sys.stdout)                # open stdout in unbuffered mode (automatically flush after each print operation)
@@ -74,14 +74,14 @@ while True:
   ser.write(('!RW' + chr(CMD_READ) + chr(ADDR_SERIAL)).encode())    # send command
   buf = ser.read(12).decode('UTF-8')           # get bytes (will block until received)  
   if buf[0] == chr(START_BYTE) and buf[-1] == chr(STOP_BYTE):   # if valid data received with no error, continue
+    # print(buf[0], buf[-1])
     break
-  # print(type(buf))
-  print(buf[0], buf[1:-2], buf[-1])
+  
   time.sleep(1)
-for i in range(1,len(buf)):   # display data
-  sys.stdout.write("%02X" % ord(buf[i]))
+# for i in range(1,len(buf)):   # display data
+#   sys.stdout.write("%02X" % ord(buf[i]))
 print("")
-
+print(buf[0], buf[1:-2], buf[-1])
 # print("Writing and verifying data to tag...")
 # while True:
 #   ser.write('!RW' + chr(CMD_WRITE) + chr(3) + '\xFE\xED\xBE\xEF')    # send command, write 4-byte string into address 3 (User EEPROM area)

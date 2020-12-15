@@ -1,10 +1,6 @@
 import cv2
 import os
 
-
-
-
-
 def save_frame_camera_key(device_num, dir_path, rfid, ext='jpg', delay=1, window_name='frame'):
     WIDTH = 1920
     HEIGHT = 1080

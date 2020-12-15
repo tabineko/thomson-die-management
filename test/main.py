@@ -13,7 +13,12 @@ DEVICE_ID = 0
 WIDTH = 1920
 HEIGHT = 1080
 FPS = 30
-
+    # cap = cv2.VideoCapture(DEVICE_ID)
+    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+    # # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y','U','Y','V'))
+    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+    # cap.set(cv2.CAP_PROP_FPS, FPS)
 
 class ImageButton(ButtonBehavior, Image):
     preview = ObjectProperty(None)

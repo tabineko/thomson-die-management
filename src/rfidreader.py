@@ -1,5 +1,6 @@
 import sys
 import serial
+import time
 
 
 class Unbuffered(object):
@@ -30,11 +31,14 @@ class RfidReader():
         while True:
             ser.write(('!RW' + chr(self.cmd_read) + chr(self.addr_serial)).encode())
             buf = ser.read(12).decode('UTF-8')
-            if buf[0] == chr(self.start_byte) and buf[-1] == chr(self.stop_byte):
-                break
+            if len(buf) != 0:
+                if buf[0] == chr(self.start_byte) and buf[-1] == chr(self.stop_byte):
+                    self.rfid = buf[1:]
+                    break
+            time.sleep(1)
 
-        self.rfid = buf
         ser.close()
+        return self.rfid
 
     def get_rfid(self):
         return self.rfid
@@ -42,8 +46,8 @@ class RfidReader():
 
 def main():
     reader = RfidReader()
-    reader.read_rfid()
-    rfid = reader.get_rfid()
+    rfid = reader.read_rfid()
+    # rfid = reader.get_rfid()
     print(rfid)
 
 

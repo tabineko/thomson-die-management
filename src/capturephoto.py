@@ -14,7 +14,7 @@ class CameraApp():
         self.width_photo = width_photo
         self.height_photo = height_photo
         self.fps = fps
-
+        self.path_photo = None
 
     def save_frame_camera_key(self, dir_path, rfid, ext='jpg', delay=1, window_name='frame'):
         cap = cv2.VideoCapture(self.device_num)
@@ -32,23 +32,23 @@ class CameraApp():
             key = cv2.waitKey(delay) & 0xFF
             if key == ord('c'):
                 cv2.imwrite('{}.{}'.format(base_path, ext), frame)
-                return '{}.{}'.format(base_path, ext)
+                self.path = '{}.{}'.format(base_path, ext)
+                break
+
             elif key == ord('q'):
                 break
 
         cv2.destroyWindow(window_name)
 
-
-def show_img(filepath):
-    img = cv2.imread(filepath, 1)
-    cv2.imshow('image', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    def show_img(self):
+        img = cv2.imread(self.path_photo, 1)
+        cv2.imshow('image', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
     cam = CameraApp(device_num=1)
     path = cam.save_frame_camera_key('data/temp', 'rfid')
-    
     print(path)
-    show_img(path)
+    cam.show_img(path)

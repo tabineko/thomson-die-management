@@ -1,6 +1,7 @@
 import sys
 import serial
 import time
+import os
 
 
 class Unbuffered(object):
@@ -42,6 +43,9 @@ class RfidReader():
 
     def get_rfid(self):
         return self.rfid
+
+    def search_img(self, photo_dir='../data/', extention='.jpg'):
+        return os.path.isfile(photo_dir + str(self.rfid) + extention)
 
 
 def main():

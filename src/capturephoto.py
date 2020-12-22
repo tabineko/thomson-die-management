@@ -49,6 +49,6 @@ class CameraApp():
 
 if __name__ == '__main__':
     cam = CameraApp(device_num=1)
-    path = cam.save_frame_camera_key('data/temp', 'rfid')
+    path = cam.save_frame_camera_key('data/photo', 'rfid')
     print(path)
     cam.show_img(path)

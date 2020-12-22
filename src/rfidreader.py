@@ -44,8 +44,9 @@ class RfidReader():
     def get_rfid(self):
         return self.rfid
 
-    def search_img(self, photo_dir='../data/', extention='.jpg'):
-        return os.path.isfile(photo_dir + str(self.rfid) + extention)
+    def search_img(self, photo_dir='../data/photo', extention='jpg'):
+        base_path = os.path.join(photo_dir, str(self.rfid))
+        return os.path.isfile('{}.{}'.format(base_path, extention))
 
 
 def main():

@@ -26,7 +26,7 @@ class FrameBase(tk.Tk):
 
     def change(self, frame):
         # self.frame.destroy()
-        self.frame = frame(self, width=self.width, height=self.height)
+        self.frame = frame(master=self, width=self.width, height=self.height)
         self.frame.grid(row=0, column=0, sticky="nsew")
         # self.frame.pack(expand=True, fill="both") # make new frame
 
@@ -44,7 +44,7 @@ class StartPageFrame(tk.Frame):
 
         btn = tk.Button(master=self, text='Read RFID', width=5,
                         command=lambda: self.master.change(RFIDConfirmFrame))
-        btn.pack(anchor=tk.NW)
+        btn.grid(row=0, column=0)
 
 
 class RFIDConfirmFrame(tk.Frame):
@@ -61,14 +61,14 @@ class RFIDConfirmFrame(tk.Frame):
 
         lbl = tk.Label(self, text='rfid: {}'.format(self.master.rfid),
                        height=5, font=("Migu 1M",20))
-        lbl.pack()
+        lbl.grid(row=0, column=0, columnspan=2)
 
         btn = tk.Button(master=self, text='Cancel', width=5,
                         command=lambda: self.master.backToStart())
-        btn.pack(fill='x', padx=20, anchor=tk.CENTER)
+        btn.grid(row=1, column=0)
         btn = tk.Button(master=self, text='Continue', width=5,
                         command=lambda: self.fileconfirm())
-        btn.pack(fill='x', padx=20, anchor=tk.CENTER)
+        btn.grid(row=1, column=1)
     
     def fileconfirm(self):
         print(os.getcwd())
@@ -90,15 +90,17 @@ class FileExist(tk.Frame):
         self.img = ImageTk.PhotoImage(self.img)
 
         canvas = tk.Canvas(master=self, bg='black', width=600, height=360)
-        canvas.pack()
+        canvas.grid(row=0, column=0, columnspan=2)
         canvas.create_image(300, 180, image=self.img)
 
         btn = tk.Button(master=self, text='Cancel', width=5,
                         command=lambda: self.master.backToStart())
-        btn.pack(fill='x', padx=20, side='left')
+        btn.grid(row=1, column=0)
+        # btn.pack(fill='x', padx=20, side='left')
         btn = tk.Button(master=self, text='Recapture', width=5,
                         command=lambda: self.master.change(Cammera))
-        btn.pack(fill='x', padx=20, side='left')
+        btn.grid(row=1, column=1)
+        # btn.pack(fill='x', padx=20, side='left')
 
     def say_hello(self):
         print('hello')

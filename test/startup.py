@@ -15,10 +15,8 @@ class FrameBase(tk.Tk):
         tk.Tk.__init__(self)
         self.geometry("1600x900")
         # self.frame = StartPageFrame(self)
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
         self.frame = RFIDConfirmFrame(self, width=self.width, height=self.height)
-        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.frame.pack(anchor=tk.CENTER)
 
         # make sure that the directory exist
         if not os.path.exists(self.photo_dir_path):
@@ -27,13 +25,13 @@ class FrameBase(tk.Tk):
     def change(self, frame):
         # self.frame.destroy()
         self.frame = frame(master=self, width=self.width, height=self.height)
-        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.frame.pack(anchor=tk.CENTER)
         # self.frame.pack(expand=True, fill="both") # make new frame
 
     def backToStart(self):
         # self.frame.destroy()
         self.frame = StartPageFrame(self, width=self.width, height=self.height)
-        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.frame.pack(anchor=tk.CENTER)
         # self.frame.pack(expand=True, fill="both")
 
 

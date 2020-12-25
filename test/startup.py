@@ -9,11 +9,11 @@ class FrameBase(tk.Tk):
         self.photo_dir_path = photo_dir_path
         self.ext = ext
         self.photo_path = ''
-        self.width = 1600
-        self.height = 900
+        self.width = 600
+        self.height = 500
         
         tk.Tk.__init__(self)
-        self.geometry("1600x900")
+        self.geometry("600x500")
         # self.frame = StartPageFrame(self)
         self.frame = RFIDConfirmFrame(self, width=self.width, height=self.height)
         self.frame.pack(anchor=tk.CENTER)
@@ -23,16 +23,19 @@ class FrameBase(tk.Tk):
             os.makedirs(self.photo_dir_path)
 
     def change(self, frame):
-        # self.frame.destroy()
+        self.frame.pack_forget()
         self.frame = frame(master=self, width=self.width, height=self.height)
         self.frame.pack(anchor=tk.CENTER)
         # self.frame.pack(expand=True, fill="both") # make new frame
 
-    def backToStart(self):
-        # self.frame.destroy()
+    def back_to_start(self):
+        self.frame.pack_forget()
         self.frame = StartPageFrame(self, width=self.width, height=self.height)
         self.frame.pack(anchor=tk.CENTER)
         # self.frame.pack(expand=True, fill="both")
+
+    def exit_application(self):
+        self.destroy()
 
 
 class StartPageFrame(tk.Frame):
@@ -40,9 +43,18 @@ class StartPageFrame(tk.Frame):
         tk.Frame.__init__(self, master, **kwargs)
         # master.title('Home')
 
-        btn = tk.Button(master=self, text='Read RFID', width=5,
+        lbl = tk.Label(self, text='Photo Capture',
+                       height=5, font=("Migu 1M",20))
+        lbl.grid(row=0, column=0, columnspan=2)
+
+        btn = tk.Button(master=self, text='Quit', width=10,
+                        command=lambda: self.master.quit())
+        btn.grid(row=1, column=0)
+
+
+        btn = tk.Button(master=self, text='Read RFID', width=10,
                         command=lambda: self.master.change(RFIDConfirmFrame))
-        btn.grid(row=0, column=0)
+        btn.grid(row=1, column=1)
 
 
 class RFIDConfirmFrame(tk.Frame):
@@ -62,16 +74,13 @@ class RFIDConfirmFrame(tk.Frame):
         lbl.grid(row=0, column=0, columnspan=2)
 
         btn = tk.Button(master=self, text='Cancel', width=5,
-                        command=lambda: self.master.backToStart())
+                        command=lambda: self.master.back_to_start())
         btn.grid(row=1, column=0)
         btn = tk.Button(master=self, text='Continue', width=5,
                         command=lambda: self.fileconfirm())
         btn.grid(row=1, column=1)
     
     def fileconfirm(self):
-        print(os.getcwd())
-        print(self.master.photo_path)
-
         if os.path.isfile(self.master.photo_path):
             self.master.change(FileExist)
         else:
@@ -92,13 +101,11 @@ class FileExist(tk.Frame):
         canvas.create_image(300, 180, image=self.img)
 
         btn = tk.Button(master=self, text='Cancel', width=5,
-                        command=lambda: self.master.backToStart())
+                        command=lambda: self.master.back_to_start())
         btn.grid(row=1, column=0)
-        # btn.pack(fill='x', padx=20, side='left')
         btn = tk.Button(master=self, text='Recapture', width=5,
                         command=lambda: self.master.change(Cammera))
         btn.grid(row=1, column=1)
-        # btn.pack(fill='x', padx=20, side='left')
 
     def say_hello(self):
         print('hello')
@@ -109,20 +116,39 @@ class FileNotExist(tk.Frame):
         tk.Frame.__init__(self, master, **kwargs)
 
         lbl = tk.Label(self, text='Cannot find the photo.',
-                       height=5, font=("Migu 1M",20))
+                       height=5, font=("Migu 1M", 20))
         lbl.pack()
 
         btn = tk.Button(master=self, text='Home', width=5,
                         command=lambda: self.master.backToStart())
         btn.pack(fill='x', padx=20, side='left')
         btn = tk.Button(master=self, text='Activate Camera', width=5,
-                        command=lambda: self.master.change())
+                        command=lambda: self.master.change(Cammera))
         btn.pack(fill='x', padx=20, side='left')
 
-    def say_hello(self):
-        print('hello, world!')
+    class Cammera(tk.Frame):
 
-    # class Cammera(tk.Frame):
+    
+    class ChechCapturedPhoto(tk.Frame):
+
+
+    class SelectOutputFile(tk.Frame):
+
+
+    class QuitorAgain(tk.Frame):
+        def __init__(self, master=None, **kwargs):
+            tk.Frame.__init__(self, master, **kwargs)
+
+            lbl = tk.Label(self, text='Done.',
+                           height=5, font=("Migu 1M", 20))
+            lbl.grid(row=0, column=0, columnspan=2)
+
+            btn = tk.Button(master=self, text='Quit', width=5,
+                            command=lambda: self.master.quit())
+            btn.grid(row=1, column=0)
+            btn = tk.Button(master=self, text='Again.', width=5,
+                            command=lambda: self.master.back_to_start())
+            btn.grid(row=1, column=1)
 
 
 if __name__ == "__main__":

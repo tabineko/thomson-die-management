@@ -1,6 +1,7 @@
 import tkinter as tk
 import os
 from PIL import Image, ImageTk
+import tkinter.filedialog as tkdialog
 
 
 class FrameBase(tk.Tk):
@@ -127,13 +128,48 @@ class FileNotExist(tk.Frame):
         btn.pack(fill='x', padx=20, side='left')
 
     class Cammera(tk.Frame):
+        def __init__(self, master=None, **kwargs):
+            tk.Frame.__init__(self, master, **kwargs)
+            
 
-    
-    class ChechCapturedPhoto(tk.Frame):
 
+    class CheckCapturedPhoto(tk.Frame):
+        def __init__(self, master=None, **kwargs):
+            tk.Frame.__init__(self, master, **kwargs)
 
+    # seems doesn't needed
     class SelectOutputFile(tk.Frame):
+        def __init__(self, master=None, **kwargs):
+            tk.Frame.__init__(self, master, **kwargs)
 
+            cwd = os.path.dirname(__file__)
+            prev_path_holder = os.path.join(cwd, '.path_holder.txt')
+            
+            with open(prev_path_holder, 'r') as f:
+                self.iDir = f.readline().strip()
+            
+            if not os.path.isfile(self.iDir):
+                self.iDir = os.path.abspath(os.path.dirname(__file__))
+
+            lbl = tk.Label(self, text='filename: ')
+            lbl.pack(side='left')
+
+            filenameEntry = tk.Entry(self, text="", textvariable= self.iDir)
+            filenameEntry.pack(side='left')
+
+            btn = tk.Button(master=self, text='Browse', width=5,
+                            command=lambda: self.file_open())
+            btn.pack(side='left')
+            
+        def file_open(self):
+            accepting_file_types = [('All Excel Files', '.xl* .xlsx .xlsm .xlsb .xlam .xltx .xltm .xls .xlt .htm .html .mht .mhtml .xml .xla .xlm .xlw .xjs .xjm .xjc .xjw .xja .xjt .odc .uxdc .ods')]
+            title_dialog = 'Select file to write'
+            
+            self.ret = tkdialog.askopenfilename(accepting_file_types,
+                                                self.iDir, title_dialog, multiple=False)
+
+        def save_rfid(self):
+            pass
 
     class QuitorAgain(tk.Frame):
         def __init__(self, master=None, **kwargs):

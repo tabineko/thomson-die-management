@@ -152,7 +152,7 @@ class Cammera(tk.Frame):
         self.stream_img()
 
     def stream_img(self):
-        ret, self.frame = self.capture.read()
+        ret, self.frame = self.cap.read()
         if ret:
             self.tk_frame = cv2.resize(self.frame, (600, 360))
             self.tk_frame = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.tk_frame, cv2.COLOR_BGR2RGB)))
@@ -238,6 +238,10 @@ class QuitorAgain(tk.Frame):
         btn.grid(row=1, column=1)
 
 
-if __name__ == "__main__":
+def main():
     root = FrameBase()
     root.mainloop()
+
+
+if __name__ == "__main__":
+    main()

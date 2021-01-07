@@ -15,6 +15,14 @@ class FrameBase(tk.Tk):
         self.width = 600
         self.height = 500
 
+        # if you can use H264-suported web-cam, you should use H264 format.
+        # MJPG uses more CPU power than H264.
+        self.cap = cv2.VideoCapture(1)
+        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        self.cap.set(cv2.CAP_PROP_FPS, 30)
+
         tk.Tk.__init__(self)
         self.geometry("600x500")
         self.frame = StartPageFrame(self)
@@ -69,18 +77,9 @@ class RFIDConfirmFrame(tk.Frame):
         # delete CR and save rfid
         self.master.rfid = reader.read_rfid().replace('\r', '')
 
-        print('---------------')
-        print((self.master.rfid))
-        print(self.master.photo_dir_path)
-        print('{}.{}'.format(self.master.rfid, self.master.ext))
-        print(self.master.rfid + '.' + self.master.ext)
-
         self.master.photo_path = os.path.join(self.master.photo_dir_path,
                                               '{}.{}'.format(self.master.rfid,
                                                              self.master.ext))
-
-        print(self.master.photo_path)
-        print('---------------')
 
         lbl = tk.Label(self, text='rfid: {}'.format(self.master.rfid),
                        height=5, font=("Migu 1M",20))
@@ -120,9 +119,6 @@ class FileExist(tk.Frame):
                         command=lambda: self.master.change(Cammera))
         btn.grid(row=1, column=1)
 
-    def say_hello(self):
-        print('hello')
-
 
 class FileNotExist(tk.Frame):
     def __init__(self, master=None, **kwargs):
@@ -144,12 +140,6 @@ class Cammera(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
 
-        self.cap = cv2.VideoCapture(1)
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-
         self.canvas = tk.Canvas(master=self, bg='black', width=600, height=360)
         self.canvas.grid(row=0, column=0, columnspan=3)
         # self.canvas.create_image(300, 180, image=self.img)
@@ -161,10 +151,11 @@ class Cammera(tk.Frame):
                         command=lambda: self.save_current_frame())
         btn.grid(row=1, column=1)
 
+        self.flag_streaming = True
         self.stream_img()
 
     def stream_img(self):
-        ret, self.frame = self.cap.read()
+        ret, self.frame = self.master.cap.read()
         if ret:
             self.tk_frame = cv2.resize(self.frame, (600, 360))
             self.tk_frame = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.tk_frame, cv2.COLOR_BGR2RGB)))
@@ -172,13 +163,13 @@ class Cammera(tk.Frame):
         else:
             self.canvas.create_text(300, 180, text='None')
         
-        self.after(30, self.stream_img)
+        if self.flag_streaming:
+            self.after(30, self.stream_img)
 
     def save_current_frame(self):
-        print(self.master.photo_path)
+        self.flag_streaming = False
         cv2.imwrite(self.master.photo_path, self.frame)
-        print('here!')
-        self.cap.release()
+        # self.cap.release()
         # cv2.destroyAllWindows()
         self.master.change(CheckCapturedPhoto)
 
@@ -187,14 +178,13 @@ class CheckCapturedPhoto(tk.Frame):
     def __init__(self, master=None, **kwargs):
         tk.Frame.__init__(self, master, **kwargs)
 
-        print(self.master.photo_path)
-        img = Image.open(self.master.photo_path)
-        img = img.resize((600, 360))
-        img = ImageTk.PhotoImage(img)
+        self.img = Image.open(self.master.photo_path)
+        self.img = self.img.resize((600, 360))
+        self.img = ImageTk.PhotoImage(self.img)
 
         self.canvas = tk.Canvas(master=self, bg='black', width=600, height=360)
         self.canvas.grid(row=0, column=0, columnspan=2)
-        self.canvas.create_image(300, 180, image=img)
+        self.canvas.create_image(300, 180, image=self.img)
 
         btn = tk.Button(master=self, text='Recapture', width=15,
                         command=lambda: self.master.change(Cammera))

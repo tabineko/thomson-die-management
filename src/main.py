@@ -18,7 +18,8 @@ class FrameBase(tk.Tk):
         # if you can use H264-suported web-cam, you should use H264 format.
         # MJPG uses more CPU power than H264.
         self.cap = cv2.VideoCapture(1)
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+        self.cap.set(cv2.CAP_PROP_FOURCC,
+                     cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
         self.cap.set(cv2.CAP_PROP_FPS, 30)
@@ -26,7 +27,6 @@ class FrameBase(tk.Tk):
         tk.Tk.__init__(self)
         self.geometry("600x500")
         self.frame = StartPageFrame(self)
-        # self.frame = RFIDConfirmFrame(self, width=self.width, height=self.height)
         self.frame.pack(anchor=tk.CENTER)
 
         # make sure that the directory exist
@@ -55,7 +55,7 @@ class StartPageFrame(tk.Frame):
         # master.title('Home')
 
         lbl = tk.Label(self, text='Photo Capture',
-                       height=5, font=("Migu 1M",20))
+                       height=5, font=("Migu 1M", 20))
         lbl.grid(row=0, column=0, columnspan=2)
 
         btn = tk.Button(master=self, text='Quit', width=10,
@@ -82,7 +82,7 @@ class RFIDConfirmFrame(tk.Frame):
                                                              self.master.ext))
 
         lbl = tk.Label(self, text='rfid: {}'.format(self.master.rfid),
-                       height=5, font=("Migu 1M",20))
+                       height=5, font=("Migu 1M", 20))
         lbl.grid(row=0, column=0, columnspan=2)
 
         btn = tk.Button(master=self, text='Cancel', width=15,
@@ -158,11 +158,13 @@ class Cammera(tk.Frame):
         ret, self.frame = self.master.cap.read()
         if ret:
             self.tk_frame = cv2.resize(self.frame, (600, 360))
-            self.tk_frame = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(self.tk_frame, cv2.COLOR_BGR2RGB)))
+            self.tk_frame = ImageTk.PhotoImage(Image.fromarray(
+                cv2.cvtColor(self.tk_frame, cv2.COLOR_BGR2RGB))
+            )
             self.canvas.create_image(300, 180, image=self.tk_frame)
         else:
             self.canvas.create_text(300, 180, text='None')
-        
+
         if self.flag_streaming:
             self.after(30, self.stream_img)
 
@@ -201,29 +203,35 @@ class SelectOutputFile(tk.Frame):
 
         cwd = os.path.dirname(__file__)
         prev_path_holder = os.path.join(cwd, '.path_holder.txt')
-            
+
         with open(prev_path_holder, 'r') as f:
             self.iDir = f.readline().strip()
-            
+
         if not os.path.isfile(self.iDir):
             self.iDir = os.path.abspath(os.path.dirname(__file__))
 
         lbl = tk.Label(self, text='filename: ')
         lbl.pack(side='left')
 
-        filenameEntry = tk.Entry(self, text="", textvariable= self.iDir)
+        filenameEntry = tk.Entry(self, text="", textvariable=self.iDir)
         filenameEntry.pack(side='left')
 
         btn = tk.Button(master=self, text='Browse', width=15,
                         command=lambda: self.file_open())
         btn.pack(side='left')
-            
+
     def file_open(self):
-        accepting_file_types = [('All Excel Files', '.xl* .xlsx .xlsm .xlsb .xlam .xltx .xltm .xls .xlt .htm .html .mht .mhtml .xml .xla .xlm .xlw .xjs .xjm .xjc .xjw .xja .xjt .odc .uxdc .ods')]
+        accepting_file_types = [
+            ('All Excel Files', '.xl* .xlsx .xlsm .xlsb .xlam .xltx .xltm \
+                .xls .xlt .htm .html .mht .mhtml .xml .xla .xlm .xlw .xjs \
+                    .xjm .xjc .xjw .xja .xjt .odc .uxdc .ods')
+        ]
+
         title_dialog = 'Select file to write'
-            
+
         self.ret = tkdialog.askopenfilename(accepting_file_types,
-                                            self.iDir, title_dialog, multiple=False)
+                                            self.iDir, title_dialog,
+                                            multiple=False)
 
     def save_rfid(self):
         pass

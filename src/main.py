@@ -3,6 +3,7 @@ import os
 from PIL import Image, ImageTk
 import tkinter.filedialog as tkdialog
 import cv2
+from rfidreader import RfidReader as rr
 
 
 class FrameBase(tk.Tk):
@@ -64,7 +65,8 @@ class RFIDConfirmFrame(tk.Frame):
         # master.title('RFID Confirmation')
 
         # RFID読み込み
-        self.master.rfid = 'rfid'
+        reader = rr()
+        self.master.rfid = str(reader.read_rfid())
 
         self.master.photo_path = os.path.join(self.master.photo_dir_path,
                                               '{}.{}'.format(self.master.rfid,

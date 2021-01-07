@@ -58,11 +58,11 @@ class StartPageFrame(tk.Frame):
                        height=5, font=("Migu 1M", 20))
         lbl.grid(row=0, column=0, columnspan=2)
 
-        btn = tk.Button(master=self, text='Quit', width=10,
+        btn = tk.Button(master=self, text='Quit', width=15,
                         command=lambda: self.master.quit())
         btn.grid(row=1, column=0)
 
-        btn = tk.Button(master=self, text='Read RFID', width=10,
+        btn = tk.Button(master=self, text='Read RFID', width=15,
                         command=lambda: self.master.change(RFIDConfirmFrame))
         btn.grid(row=1, column=1)
 
@@ -141,7 +141,7 @@ class Cammera(tk.Frame):
         tk.Frame.__init__(self, master, **kwargs)
 
         self.canvas = tk.Canvas(master=self, bg='black', width=600, height=360)
-        self.canvas.grid(row=0, column=0, columnspan=3)
+        self.canvas.grid(row=0, column=0, columnspan=2)
         # self.canvas.create_image(300, 180, image=self.img)
 
         btn = tk.Button(master=self, text='Back', width=15,
